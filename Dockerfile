@@ -28,15 +28,17 @@ WORKDIR /var/www/html
 # Copy application code
 COPY . .
 
-# Install dependencies
-RUN COMPOSER_DISABLE_NETWORK=1 composer install --optimize-autoloader --no-scripts || composer update --optimize-autoloader --no-scripts
+# Create directories with proper permissions
+RUN mkdir -p var/cache var/log vendor \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 var/ vendor/
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+# Set environment for composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Switch to www-data user
-USER www-data
+# Don't switch to www-data user - stay as root for flexibility
+# USER www-data
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000

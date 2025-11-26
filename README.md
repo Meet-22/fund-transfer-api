@@ -38,23 +38,32 @@ This application follows a clean architecture pattern with clear separation of c
    cd fund-transfer-api
    ```
 
-2. **Start the services:**
+2. **Setup environment variables:**
+   ```bash
+   # Copy the environment template (REQUIRED)
+   cp .env.example .env
+   
+   # Optional: Edit .env if you have port conflicts
+   # Most developers can skip this step
+   ```
+
+3. **Start the services:**
    ```bash
    docker-compose up -d
    ```
 
-3. **Install dependencies:**
+4. **Install dependencies:**
    ```bash
    docker-compose exec app composer install
    ```
 
-4. **Create database and run migrations:**
+5. **Create database and run migrations:**
    ```bash
    docker-compose exec app php bin/console doctrine:database:create
    docker-compose exec app php bin/console doctrine:migrations:migrate
    ```
 
-5. **Create test database:**
+6. **Create test database:**
    ```bash
    docker-compose exec app php bin/console doctrine:database:create --env=test
    docker-compose exec app php bin/console doctrine:migrations:migrate --env=test
