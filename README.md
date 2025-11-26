@@ -35,7 +35,6 @@ This application follows a clean architecture pattern with clear separation of c
 1. **Clone and setup:**
    ```bash
    git clone <repository-url>
-   cd fund-transfer-api
    ```
 
 2. **Setup environment variables:**
