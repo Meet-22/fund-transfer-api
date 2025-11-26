@@ -303,32 +303,6 @@ TRANSACTION_TIMEOUT_MINUTES=5
    client_max_body_size 1M;
    ```
 
-### Scaling Considerations
-
-- **Horizontal Scaling**: Deploy multiple app containers behind a load balancer
-- **Database**: Use MySQL master-slave replication for read scaling
-- **Redis**: Implement Redis Cluster for distributed caching
-- **Monitoring**: Add Prometheus metrics and Grafana dashboards
-
-## 📈 Future Enhancements
-
-### Planned Features
-- [ ] JWT-based authentication system
-- [ ] Webhook notifications for transaction events  
-- [ ] Multi-currency support with real-time rates
-- [ ] Transaction fee calculation engine
-- [ ] Scheduled/recurring transfers
-- [ ] Advanced fraud detection
-- [ ] Admin dashboard with analytics
-- [ ] Mobile SDK for easy integration
-
-### Architecture Improvements
-- [ ] Event-driven architecture with message queues
-- [ ] CQRS pattern for read/write separation
-- [ ] Microservices decomposition
-- [ ] GraphQL API endpoint
-- [ ] Real-time WebSocket notifications
-
 ## 🐛 Troubleshooting
 
 ### Common Issues
@@ -380,14 +354,6 @@ This project is for evaluation purposes. See company policies for usage rights.
 3. Update documentation for API changes
 4. Use meaningful commit messages
 5. Ensure all tests pass before submitting
-
-## 📞 Support
-
-For technical questions or issues:
-- Check the troubleshooting section
-- Review application logs in `var/log/`
-- Check Docker container logs: `docker-compose logs [service]`
-
 ---
 
 **Built with ❤️ using Symfony, Docker, and modern PHP practices**
