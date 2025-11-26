@@ -1,0 +1,10 @@
+services:
+    # Make services public for testing
+    App\Service\FundTransferService:
+        public: true
+        
+    App\Repository\AccountRepository:
+        public: true
+        
+    App\Repository\TransactionRepository:
+        public: true

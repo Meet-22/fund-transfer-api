@@ -1,0 +1,33 @@
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> Environment Files Security ###
+# NEVER commit the main .env file - contains secrets!
+/.env
+
+# These are SAFE to commit:
+# .env.example - template with example values
+# .env.test - test environment with safe defaults
+###< Environment Files Security ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> Development files ###
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+###< Development files ###

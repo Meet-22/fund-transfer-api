@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+if (!is_file(dirname(__DIR__).'/vendor/autoload.php')) {
+    throw new LogicException('Dependencies are missing. Try running "composer install".');
+}
+
+if (!is_file(dirname(__DIR__).'/config/bootstrap.php')) {
+    throw new LogicException('Symfony is not bootstrapped. Try running "composer install".');
+}
+
+require dirname(__DIR__).'/config/bootstrap.php';
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Dotenv\Dotenv;
+
+if (!class_exists(Application::class)) {
+    throw new LogicException('You need to add "symfony/framework-bundle" as a Composer dependency.');
+}
+
+if (!isset($_SERVER['APP_ENV'])) {
+    if (!class_exists(Dotenv::class)) {
+        throw new LogicException('APP_ENV environment variable is not defined. You need to define environment variables for configuration or add "symfony/dotenv" as a Composer dependency to load variables from a .env file.');
+    }
+    (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+}
+
+// Execute PHPUnit
+$phpunitPath = dirname(__DIR__) . '/vendor/bin/phpunit';
+if (is_file($phpunitPath)) {
+    passthru($phpunitPath . ' ' . implode(' ', array_slice($argv, 1)), $returnCode);
+    exit($returnCode);
+}
+
+// Fallback to simple PHPUnit bridge
+if (class_exists('PHPUnit\TextUI\Application')) {
+    $app = new \PHPUnit\TextUI\Application();
+    $app->run();
+} else {
+    throw new LogicException('PHPUnit is not installed. Try running "composer install --dev".');
+}

@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Make services public for testing
+    App\Service\FundTransferService:
+        public: true
+
+    # Make repositories available for testing
+    App\Repository\AccountRepository:
+        public: true
+
+    App\Repository\TransactionRepository:
+        public: true

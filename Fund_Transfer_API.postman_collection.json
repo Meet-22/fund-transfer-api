@@ -1,0 +1,419 @@
+{
+  "info": {
+    "name": "Fund Transfer API",
+    "description": "Complete API collection for testing the Fund Transfer API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "apiVersion",
+      "value": "v1",
+      "type": "string"
+    },
+    {
+      "key": "accountNumber1",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accountNumber2",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "transactionId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health Checks",
+      "item": [
+        {
+          "name": "Basic Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/health"
+          }
+        },
+        {
+          "name": "Detailed Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/health/detailed"
+          }
+        },
+        {
+          "name": "Database Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/health/database"
+          }
+        },
+        {
+          "name": "Redis Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/health/redis"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Account Management",
+      "item": [
+        {
+          "name": "Create Source Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accountNumber) {",
+                  "        pm.collectionVariables.set('accountNumber1', response.data.accountNumber);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountNumber\": \"ACC-SOURCE-001\",\n  \"holderName\": \"John Doe\",\n  \"balance\": \"5000.00\",\n  \"currency\": \"USD\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts"
+          }
+        },
+        {
+          "name": "Create Destination Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accountNumber) {",
+                  "        pm.collectionVariables.set('accountNumber2', response.data.accountNumber);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountNumber\": \"ACC-DEST-002\",\n  \"holderName\": \"Jane Smith\",\n  \"balance\": \"1000.00\",\n  \"currency\": \"USD\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts"
+          }
+        },
+        {
+          "name": "Get Account Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts/{{accountNumber1}}"
+          }
+        },
+        {
+          "name": "Check Source Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts/{{accountNumber1}}/balance"
+          }
+        },
+        {
+          "name": "Check Destination Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts/{{accountNumber2}}/balance"
+          }
+        },
+        {
+          "name": "List All Accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Fund Transfers",
+      "item": [
+        {
+          "name": "Successful Transfer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.transactionId) {",
+                  "        pm.collectionVariables.set('transactionId', response.data.transactionId);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"500.00\",\n  \"description\": \"Payment for services\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Get Transfer Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers/{{transactionId}}"
+          }
+        },
+        {
+          "name": "Get Transfer Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers/{{transactionId}}/status"
+          }
+        },
+        {
+          "name": "Transfer Simulation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"250.00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers/simulate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Error Scenarios",
+      "item": [
+        {
+          "name": "Insufficient Funds",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"10000.00\",\n  \"description\": \"This should fail - insufficient funds\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Invalid Account Number",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"INVALID-ACCOUNT\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"100.00\",\n  \"description\": \"Invalid account test\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Same Account Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber1}}\",\n  \"amount\": \"100.00\",\n  \"description\": \"Same account transfer - should fail\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Negative Amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"-100.00\",\n  \"description\": \"Negative amount test\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Zero Amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"0.00\",\n  \"description\": \"Zero amount test\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Analytics & Reporting",
+      "item": [
+        {
+          "name": "Transfer Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers/stats"
+          }
+        },
+        {
+          "name": "List All Transfers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Account Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts/{{accountNumber1}}/transactions"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Account Status Management",
+      "item": [
+        {
+          "name": "Deactivate Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"inactive\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts/{{accountNumber2}}/status"
+          }
+        },
+        {
+          "name": "Transfer to Inactive Account (Should Fail)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromAccountNumber\": \"{{accountNumber1}}\",\n  \"toAccountNumber\": \"{{accountNumber2}}\",\n  \"amount\": \"100.00\",\n  \"description\": \"Transfer to inactive account\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/transfers"
+          }
+        },
+        {
+          "name": "Reactivate Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/{{apiVersion}}/accounts/{{accountNumber2}}/status"
+          }
+        }
+      ]
+    }
+  ]
+}
